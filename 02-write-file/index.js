@@ -5,7 +5,7 @@ const { stdin: input, stdout: output } = require('process');
 const rl = readline.createInterface({ input, output });
 
 rl.on('SIGINT', () => {
-  process.stdout.write('\nGood By;)');
+  output.write('\nGood By;)');
   setTimeout(()=>{
     rl.close();
   },500);
@@ -14,7 +14,7 @@ rl.on('SIGINT', () => {
 function inputStream(){
   rl.question('Input your text,please(type "exit" to exit from input mode): ', async(input) => {
     if(input.match(/^exit?$/i)){
-      process.stdout.write('\nGood By;)');
+      output.write('\nGood By;)');
       rl.close();
     } else 
     { 
