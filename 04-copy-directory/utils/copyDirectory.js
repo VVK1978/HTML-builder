@@ -1,31 +1,41 @@
 const fs=require('fs');
 const path=require('path');
 
-function copyDir(sourceDir, targetDir) {
-
-  fs.stat(targetDir, function(err) {
-    if (!err) {
-      fs.readdir(targetDir, (err, files) => {
-        if (err) throw err;
-        for (const file of files) {
-          fs.unlink(path.join(targetDir, file), err => {
-            if (err) throw err;
-          });
-        }
-        copyFiles(sourceDir,targetDir);
-      });
-    }
-    else if (err.code === 'ENOENT') {
+async function copyDir(sourceDir,targetDir){
+  fs.access(targetDir,async err=> {
+    if (err && err.code === 'ENOENT') {
       fs.mkdir(targetDir,{ recursive: true, force:true },err=>{
         if(err) throw err;
-        copyFiles(sourceDir,targetDir);
       });
+      copyFiles(sourceDir,targetDir);
+    } else {
+      await delFiles(targetDir);
+      await copyFiles(sourceDir,targetDir);
     }
   });
 }
 
+function delFiles(targetDir){
+  fs.readdir(targetDir, (err, files) => {
+    if (err) throw err;
+    if(!files.length){
+      fs.rmdir(targetDir,err=>{
+        if(err) throw err;
+      });
+    } 
+    files.forEach((file) =>{
+      fs.stat(path.join(targetDir, file),(err,stats)=>{
+        if(stats.isFile()){
+          fs.unlink(path.join(targetDir, file), err => {
+            if (err) throw err;
+          });
+        } 
+      });
+    });
+  });
+}
+
 function copyFiles(sourceDir,targetDir){
- 
   fs.readdir(sourceDir,(err,files)=>{
     if(err){
       throw err;

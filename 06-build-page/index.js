@@ -25,14 +25,12 @@ const replace=()=>{
     if(err) throw err;
     let template=await fs.promises.readFile(path.join(targetDir,'index.html'),'utf8');
     await files.forEach(async(file)=>{
-      if(path.extname(file)==='.html'){
+      if(path.extname(file)===await '.html'){
         const dataComponent=await fs.promises.readFile(path.join(components,path.basename(file)),'utf8');
-        let reg=await new RegExp(`{{${path.basename(file,path.extname(file))}}}`,'g');
+        let reg= await new RegExp(`{{${path.basename(file,path.extname(file))}}}`,'g');
         template= await template.replace(reg, dataComponent);
-        await fs.writeFile(path.join(__dirname,'project-dist','index.html'),template, (err)=> {
-          if (err) throw err;
-        });
       }
+      await fs.promises.writeFile(path.join(__dirname,'project-dist','index.html'),template);
     });
   }); 
 };
