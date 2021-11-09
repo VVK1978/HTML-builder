@@ -21,16 +21,18 @@ fs
   });
 
 const replace=()=>{
+  let result = '';
   fs.readdir(components,async(err,files)=>{
     if(err) throw err;
     let template=await fs.promises.readFile(path.join(targetDir,'index.html'),'utf8');
     await files.forEach(async(file)=>{
-      if(path.extname(file)===await '.html'){
+      if(await path.extname(file)==='.html'){
         const dataComponent=await fs.promises.readFile(path.join(components,path.basename(file)),'utf8');
         let reg= await new RegExp(`{{${path.basename(file,path.extname(file))}}}`,'g');
         template= await template.replace(reg, dataComponent);
-      }
-      await fs.promises.writeFile(path.join(__dirname,'project-dist','index.html'),template);
+        result=await template;
+      } 
+      await fs.promises.writeFile(path.join(__dirname,'project-dist','index.html'),result);
     });
   }); 
 };
