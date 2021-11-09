@@ -3,6 +3,7 @@ const fs=require('fs');
 const path=require('path');
 const { stdin: input, stdout: output } = require('process');
 const rl = readline.createInterface({ input, output });
+const writeStream=fs.createWriteStream(path.join(__dirname,'text.txt'),{flags:'a'});
 
 rl.on('SIGINT', () => {
   output.write('\nGood By;)');
@@ -18,7 +19,6 @@ function inputStream(){
       rl.close();
     } else 
     { 
-      const writeStream=fs.createWriteStream(path.join(__dirname,'text.txt'),{flags:'a'});
       writeStream.write(`\r\n${input}`);
       inputStream();
     }
